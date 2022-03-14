@@ -1,24 +1,3 @@
-// fetch(
-//     "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/laurpe",
-//     {
-//         method: "GET",
-//         headers: { "Content-type": "application/json; charset=UTF-8" },
-//     }
-// );
-
-// fetch(
-//     "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/laurpe",
-//     {
-//         method: "POST",
-//         body: JSON.stringify({
-//             message: "hello",
-//         }),
-//         headers: { "Content-type": "application/json; charset=UTF-8" },
-//     }
-//     .then((response) => response.json())
-//     .then((data) => console.log("get response:", data))
-// );
-
 class FetchWrapper {
     constructor(baseURL) {
         this.baseURL = baseURL;
@@ -61,16 +40,14 @@ let api = new FetchWrapper(
     "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
 );
 
-// api.post("laurpe", {
-//     fields: { foodname: { stringValue: "pizza" }, fat: { stringValue: "5" } },
-// });
-api.get("laurpe");
+api.get("laurpe1");
 
 const carbs = document.querySelector("#carbs");
 const protein = document.querySelector("#protein");
 const fat = document.querySelector("#fat");
 const food = document.querySelector("#food");
 const form = document.querySelector("#add-food");
+const stats = document.querySelector("#stat-list");
 
 form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -92,8 +69,84 @@ form.addEventListener("submit", (event) => {
         },
     };
 
-    api.post("laurpe", foodObject);
-    api.get("laurpe");
+    api.post("laurpe1", foodObject);
 });
 
-console.log(carbs, protein, fat);
+// show stats
+
+const showStats = async () => {
+    const response = await api.get("laurpe1");
+    response.documents.forEach((item) => {
+        stats.insertAdjacentHTML(
+            "beforeend",
+            `
+            <li>
+                ${item.fields.food.stringValue}
+                carbs
+                ${item.fields.carbs.integerValue}
+                protein
+                ${item.fields.protein.integerValue}
+                fat
+                ${item.fields.fat.integerValue}
+            </li>
+        `
+        );
+    });
+};
+
+showStats();
+
+const getMacros = async () => {
+    const response = await api.get("laurpe1");
+    console.log(response.documents);
+
+    const carbs = response.documents.reduce((prev, current) => {
+        return prev + Number(current.fields.carbs.integerValue);
+    }, 0);
+
+    const protein = response.documents.reduce((prev, current) => {
+        return prev + Number(current.fields.protein.integerValue);
+    }, 0);
+
+    const fat = response.documents.reduce((prev, current) => {
+        return prev + Number(current.fields.fat.integerValue);
+    }, 0);
+
+    return [carbs, protein, fat];
+};
+
+const createChart = async () => {
+    const statsChart = document.getElementById("stats-chart").getContext("2d");
+    const chart = new Chart(statsChart, {
+        type: "bar",
+        data: {
+            labels: ["Carbohydrates", "Protein", "Fat"],
+            datasets: [
+                {
+                    label: "amount",
+                    data: await getMacros(),
+                    backgroundColor: [
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(255, 206, 86, 0.2)",
+                    ],
+                },
+            ],
+        },
+        options: {
+            scales: {
+                yAxes: {
+                    title: {
+                        display: true,
+                        text: "Amount (grams)",
+                    },
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+};
+
+createChart();
+
+// chart
