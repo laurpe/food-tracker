@@ -81,13 +81,18 @@ const showStats = async () => {
             "beforeend",
             `
             <li>
-                ${item.fields.food.stringValue}
-                carbs
-                ${item.fields.carbs.integerValue}
-                protein
-                ${item.fields.protein.integerValue}
-                fat
-                ${item.fields.fat.integerValue}
+                    <h3>
+                    ${item.fields.food.stringValue}
+                    </h3>
+                    <div class="macro">
+                    Carbohydrates: ${item.fields.carbs.integerValue} g
+                    </div>
+                    <div class="macro">
+                    Protein: ${item.fields.protein.integerValue} g
+                    </div>
+                    <div class="macro">
+                    Fat: ${item.fields.fat.integerValue} g
+                    </div>
             </li>
         `
         );
