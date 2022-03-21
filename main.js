@@ -115,16 +115,15 @@ const getMacros = async () => {
         return prev + Number(current.fields.fat.integerValue);
     }, 0);
 
-    const carbsCal = carbs * 4;
-    const proteinCal = protein * 4;
-    const fatCal = fat * 4;
+    const totalCalories = carbs * 4 + protein * 4 + fat * 4;
 
-    return [[carbs, protein, fat]];
+    return [[carbs, protein, fat], totalCalories];
 };
 
 const createChart = async () => {
     const statsChart = document.getElementById("stats-chart").getContext("2d");
     const macros = await getMacros();
+    caloriesSum.textContent = macros[1];
     const chart = new Chart(statsChart, {
         type: "bar",
         data: {
