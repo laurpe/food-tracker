@@ -1,26 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-input,
-label {
-    display: block;
+body {
+    background-color: rgb(241, 241, 241);
+    font-family: "Montserrat", sans-serif;
 }
 
 .chart {
-    width: 80%;
+    width: 100%;
+    padding: 20px;
 }
 
-ul {
-    list-style-type: none;
+h3 {
+    text-transform: capitalize;
 }
 
-ul li {
-    width: 400px;
-    box-shadow: 2px 2px 3px #ccc;
+.inputs {
+    display: flex;
+    width: 30%;
+    margin: 10px;
+}
+
+label {
+    width: 50%;
+}
+
+input,
+select {
+    width: 50%;
+    padding: 5px;
+    border: none;
+    border-radius: 3px;
+    font-family: inherit;
+}
+
+#stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.grid-item {
+    background-color: white;
     border-radius: 5px;
     padding: 10px;
-    text-align: center;
 }

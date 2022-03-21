@@ -11,30 +11,42 @@
         <h1>Food tracker</h1>
         <h2>Add food</h2>
         <form id="add-food">
-            <label for="food">Choose food:</label>
-            <select name="food" id="food">
-                <option value="pizza">Pizza</option>
-                <option value="pasta">Pasta</option>
-                <option value="burger">Burger</option>
-                <option value="soup">Soup</option>
-                <option value="salad">Salad</option>
-                <option value="apple">Apple</option>
-                <option value="peach">Peach</option>
-                <option value="cider">Cider</option>
-            </select>
-            <label for="carbs">Carbs:</label>
-            <input type="number" id="carbs" placeholder="0 g" />
-            <label for="protein">Protein:</label>
-            <input type="number" id="protein" placeholder="0 g" />
-            <label for="fat">Fat:</label>
-            <input type="number" id="fat" placeholder="0 g" />
+            <div class="inputs">
+                <label for="food">Choose food:</label>
+                <select name="food" id="food">
+                    <option value="pizza">Pizza</option>
+                    <option value="pasta">Pasta</option>
+                    <option value="burger">Burger</option>
+                    <option value="soup">Soup</option>
+                    <option value="salad">Salad</option>
+                    <option value="apple">Apple</option>
+                    <option value="peach">Peach</option>
+                    <option value="cider">Cider</option>
+                </select>
+            </div>
+            <div class="inputs">
+                <label for="carbs">Carbs:</label>
+                <input type="number" id="carbs" placeholder="0 g" />
+            </div>
+            <div class="inputs">
+                <label for="protein">Protein:</label>
+                <input type="number" id="protein" placeholder="0 g" />
+            </div>
+            <div class="inputs">
+                <label for="fat">Fat:</label>
+                <input type="number" id="fat" placeholder="0 g" />
+            </div>
             <button type="submit">Add</button>
         </form>
         <h2>Stats</h2>
         <div class="chart">
             <canvas id="stats-chart" width="700" height="300"></canvas>
         </div>
-        <ul id="stat-list"></ul>
+        <h2>Log</h2>
+        <div class="total-calories">
+            <p>Total calories logged: <span id="calories-sum"></span></p>
+        </div>
+        <div id="stat-grid"></div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="main.js"></script>
