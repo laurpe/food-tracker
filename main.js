@@ -40,8 +40,6 @@ let api = new FetchWrapper(
     "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
 );
 
-// api.get("laurpe1");
-
 const carbs = document.querySelector("#carbs");
 const protein = document.querySelector("#protein");
 const fat = document.querySelector("#fat");
@@ -49,8 +47,39 @@ const food = document.querySelector("#food");
 const form = document.querySelector("#add-food");
 const stats = document.querySelector("#stat-grid");
 const caloriesSum = document.querySelector("#calories-sum");
+const statsChart = document.getElementById("stats-chart").getContext("2d");
 
-form.addEventListener("submit", () => {
+let chart = new Chart(statsChart, {
+    type: "bar",
+    data: {
+        labels: ["Carbohydrates", "Protein", "Fat"],
+        datasets: [
+            {
+                label: "amount",
+                data: [0, 0, 0],
+                backgroundColor: [
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                ],
+            },
+        ],
+    },
+    options: {
+        scales: {
+            yAxes: {
+                title: {
+                    display: true,
+                    text: "Amount (grams)",
+                },
+                beginAtZero: true,
+            },
+        },
+    },
+});
+
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
     const foodObject = {
         fields: {
             carbs: {
@@ -67,13 +96,15 @@ form.addEventListener("submit", () => {
             },
         },
     };
-    api.post("laurpe1", foodObject);
+    await api.post("laurpe2", foodObject);
+    chart.destroy();
+    createChart();
+    createCards();
 });
 
-// show stats
-
 const createCards = async () => {
-    const response = await api.get("laurpe1");
+    stats.innerHTML = "";
+    const response = await api.get("laurpe2");
     response.documents.forEach((item) => {
         stats.insertAdjacentHTML(
             "beforeend",
@@ -97,41 +128,42 @@ const createCards = async () => {
     });
 };
 
-createCards();
-
 const getMacros = async () => {
-    const response = await api.get("laurpe1");
-    console.log(response.documents);
+    const response = await api.get("laurpe2");
 
-    const carbs = response.documents.reduce((prev, current) => {
-        return prev + Number(current.fields.carbs.integerValue);
-    }, 0);
+    const macros = response.documents.reduce(
+        (prev, current) => {
+            return {
+                carbs: prev.carbs + Number(current.fields.carbs.integerValue),
+                protein:
+                    prev.protein + Number(current.fields.protein.integerValue),
+                fat: prev.fat + Number(current.fields.fat.integerValue),
+            };
+        },
+        { carbs: 0, protein: 0, fat: 0 }
+    );
+    console.log(macros);
 
-    const protein = response.documents.reduce((prev, current) => {
-        return prev + Number(current.fields.protein.integerValue);
-    }, 0);
+    const totalCalories =
+        macros.carbs * 4 + macros.protein * 4 + macros.fat * 4;
 
-    const fat = response.documents.reduce((prev, current) => {
-        return prev + Number(current.fields.fat.integerValue);
-    }, 0);
+    macros.total = totalCalories;
 
-    const totalCalories = carbs * 4 + protein * 4 + fat * 4;
-
-    return [[carbs, protein, fat], totalCalories];
+    return macros;
 };
 
 const createChart = async () => {
-    const statsChart = document.getElementById("stats-chart").getContext("2d");
     const macros = await getMacros();
-    caloriesSum.textContent = macros[1];
-    const chart = new Chart(statsChart, {
+    caloriesSum.textContent = macros.total;
+    chart.destroy();
+    chart = new Chart(statsChart, {
         type: "bar",
         data: {
             labels: ["Carbohydrates", "Protein", "Fat"],
             datasets: [
                 {
                     label: "amount",
-                    data: macros[0],
+                    data: [macros.carbs, macros.protein, macros.fat],
                     backgroundColor: [
                         "rgba(255, 99, 132, 0.2)",
                         "rgba(54, 162, 235, 0.2)",
@@ -154,4 +186,5 @@ const createChart = async () => {
     });
 };
 
+createCards();
 createChart();

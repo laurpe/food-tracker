@@ -9,6 +9,20 @@
 body {
     background-color: rgb(241, 241, 241);
     font-family: "Roboto", sans-serif;
+    color: rgb(56, 88, 131);
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h1,
+h2 {
+    padding: 20px 0 20px 20px;
 }
 
 .chart {
@@ -23,21 +37,23 @@ h3 {
 
 .inputs {
     display: flex;
-    width: 30%;
+    width: 70%;
     margin: 10px;
+    align-items: baseline;
 }
 
 label {
-    width: 50%;
+    width: 30%;
 }
 
 input,
 select {
     width: 50%;
-    padding: 5px;
+    padding: 10px;
     border: none;
     border-radius: 3px;
     font-family: inherit;
+    font-size: 1.2rem;
 }
 
 #stat-grid {
@@ -56,4 +72,43 @@ select {
     align-items: center;
     justify-content: space-around;
     height: 200px;
+    box-shadow: 2px 2px 2px rgb(207, 207, 207);
+    max-width: 400px;
+}
+
+.grid-item:hover {
+    transform: rotate(-1deg);
+    transition: 0.3s;
+}
+
+#stats-chart {
+    background-color: white;
+    border-radius: 5px;
+}
+
+button {
+    font-size: 1.2rem;
+    font-family: inherit;
+    background-color: rgb(104, 153, 218);
+    border: none;
+    border-radius: 5px;
+    width: 7rem;
+    height: 3rem;
+    color: white;
+    margin-top: 20px;
+}
+
+form {
+    padding: 20px;
+}
+
+.total-calories {
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
+    border: 2px solid rgb(104, 153, 218);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    font-size: 1.2rem;
 }
