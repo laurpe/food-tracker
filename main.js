@@ -1,3 +1,6 @@
+import snackbar from "snackbar";
+import "snackbar/dist/snackbar.min.css";
+
 class FetchWrapper {
     constructor(baseURL) {
         this.baseURL = baseURL;
@@ -100,6 +103,7 @@ form.addEventListener("submit", async (event) => {
     chart.destroy();
     createChart();
     createCards();
+    snackbar.show("Food added succesfully!");
 });
 
 const createCards = async () => {
@@ -113,15 +117,11 @@ const createCards = async () => {
                     <h3>
                     ${item.fields.food.stringValue}
                     </h3>
-                    <div class="macro">
-                    Carbohydrates: ${item.fields.carbs.integerValue} g
-                    </div>
-                    <div class="macro">
-                    Protein: ${item.fields.protein.integerValue} g
-                    </div>
-                    <div class="macro">
-                    Fat: ${item.fields.fat.integerValue} g
-                    </div>
+                        <ul>
+                        <li class="carbs">Carbohydrates: ${item.fields.carbs.integerValue} g</li>
+                        <li class="protein">Protein: ${item.fields.protein.integerValue} g</li>
+                        <li class="fat">Fat: ${item.fields.fat.integerValue} g</li>
+                    </ul>
             </div>
         `
         );
