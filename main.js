@@ -103,14 +103,14 @@ form.addEventListener("submit", async (event) => {
     };
     try {
         await api.post("laurpe2", foodObject);
+        chart.destroy();
+        createChart();
+        createCards();
+        snackbar.show("Food added succesfully!");
     } catch (error) {
         console.error(error.message);
+        snackbar.show("Could not add food");
     }
-
-    chart.destroy();
-    createChart();
-    createCards();
-    snackbar.show("Food added succesfully!");
 });
 
 const createCards = async () => {
