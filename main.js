@@ -50,7 +50,9 @@ const food = document.querySelector("#food");
 const form = document.querySelector("#add-food");
 const stats = document.querySelector("#stat-grid");
 const caloriesSum = document.querySelector("#calories-sum");
+const caloriesSumContainer = document.querySelector(".total-calories");
 const statsChart = document.getElementById("stats-chart").getContext("2d");
+const statsChartContainer = document.querySelector(".chart");
 
 let chart = new Chart(statsChart, {
     type: "bar",
@@ -99,7 +101,12 @@ form.addEventListener("submit", async (event) => {
             },
         },
     };
-    await api.post("laurpe2", foodObject);
+    try {
+        await api.post("laurpe2", foodObject);
+    } catch (error) {
+        console.error(error.message);
+    }
+
     chart.destroy();
     createChart();
     createCards();
@@ -108,24 +115,29 @@ form.addEventListener("submit", async (event) => {
 
 const createCards = async () => {
     stats.innerHTML = "";
-    const response = await api.get("laurpe2");
-    response.documents.forEach((item) => {
-        stats.insertAdjacentHTML(
-            "beforeend",
+    try {
+        const response = await api.get("laurpe2");
+        response.documents.forEach((item) => {
+            stats.insertAdjacentHTML(
+                "beforeend",
+                `
+                <div class="grid-item">
+                        <h3>
+                        ${item.fields.food.stringValue}
+                        </h3>
+                            <ul>
+                            <li class="carbs">Carbohydrates: ${item.fields.carbs.integerValue} g</li>
+                            <li class="protein">Protein: ${item.fields.protein.integerValue} g</li>
+                            <li class="fat">Fat: ${item.fields.fat.integerValue} g</li>
+                        </ul>
+                </div>
             `
-            <div class="grid-item">
-                    <h3>
-                    ${item.fields.food.stringValue}
-                    </h3>
-                        <ul>
-                        <li class="carbs">Carbohydrates: ${item.fields.carbs.integerValue} g</li>
-                        <li class="protein">Protein: ${item.fields.protein.integerValue} g</li>
-                        <li class="fat">Fat: ${item.fields.fat.integerValue} g</li>
-                    </ul>
-            </div>
-        `
-        );
-    });
+            );
+        });
+    } catch (error) {
+        console.error(error);
+        stats.textContent = "Failed to create log";
+    }
 };
 
 const getMacros = async () => {
@@ -152,37 +164,43 @@ const getMacros = async () => {
 };
 
 const createChart = async () => {
-    const macros = await getMacros();
-    caloriesSum.textContent = macros.total;
-    chart.destroy();
-    chart = new Chart(statsChart, {
-        type: "bar",
-        data: {
-            labels: ["Carbohydrates", "Protein", "Fat"],
-            datasets: [
-                {
-                    label: "amount",
-                    data: [macros.carbs, macros.protein, macros.fat],
-                    backgroundColor: [
-                        "rgba(255, 99, 132, 0.2)",
-                        "rgba(54, 162, 235, 0.2)",
-                        "rgba(255, 206, 86, 0.2)",
-                    ],
-                },
-            ],
-        },
-        options: {
-            scales: {
-                yAxes: {
-                    title: {
-                        display: true,
-                        text: "Amount (grams)",
+    try {
+        const macros = await getMacros();
+        caloriesSum.textContent = macros.total;
+        chart.destroy();
+        chart = new Chart(statsChart, {
+            type: "bar",
+            data: {
+                labels: ["Carbohydrates", "Protein", "Fat"],
+                datasets: [
+                    {
+                        label: "amount",
+                        data: [macros.carbs, macros.protein, macros.fat],
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(255, 206, 86, 0.2)",
+                        ],
                     },
-                    beginAtZero: true,
+                ],
+            },
+            options: {
+                scales: {
+                    yAxes: {
+                        title: {
+                            display: true,
+                            text: "Amount (grams)",
+                        },
+                        beginAtZero: true,
+                    },
                 },
             },
-        },
-    });
+        });
+    } catch (error) {
+        console.error(error);
+        statsChartContainer.textContent = "Failed to create chart";
+        caloriesSumContainer.textContent = "Failed to count total calories";
+    }
 };
 
 createCards();
