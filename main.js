@@ -142,7 +142,6 @@ const getMacros = async () => {
         },
         { carbs: 0, protein: 0, fat: 0 }
     );
-    console.log(macros);
 
     const totalCalories =
         macros.carbs * 4 + macros.protein * 4 + macros.fat * 4;

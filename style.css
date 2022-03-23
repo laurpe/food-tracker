@@ -54,6 +54,11 @@ select {
     border-radius: 3px;
     font-family: inherit;
     font-size: 1.2rem;
+    color: rgb(56, 88, 131);
+}
+
+input::placeholder {
+    color: rgb(151, 171, 201);
 }
 
 #stat-grid {
@@ -73,7 +78,6 @@ select {
     justify-content: space-around;
     height: 200px;
     box-shadow: 2px 2px 2px rgb(207, 207, 207);
-    max-width: 400px;
 }
 
 .grid-item:hover {
@@ -118,13 +122,13 @@ li {
 }
 
 li.carbs::marker {
-    color: rgb(255, 149, 149);
+    color: rgba(255, 99, 133, 0.75);
 }
 
 li.protein::marker {
-    color: rgb(49, 172, 255);
+    color: rgba(54, 162, 235, 0.75);
 }
 
 li.fat::marker {
-    color: rgb(255, 244, 89);
+    color: rgba(255, 206, 86, 0.75);
 }
